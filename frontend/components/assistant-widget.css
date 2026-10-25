@@ -1,0 +1,178 @@
+/*
+ * Flat 3-tone skin for react-chatbotify (the library ships rounded bubbles and soft drop effects;
+ * everything is overridden here: square corners, 1px charcoal borders, flat fills).
+ */
+.vs-chat,
+.vs-chat > div,
+.vs-chat > div > div,
+.vs-chat .rcb-chatbot-global {
+  height: 100%;
+  min-height: 0;
+}
+.vs-chat .rcb-chat-window {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  right: auto !important;
+  bottom: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: var(--paper) !important;
+  border: 0 !important;
+  animation: none !important;
+}
+.vs-chat .rcb-chat-body-container {
+  background: var(--paper) !important;
+  padding-top: 8px;
+}
+.vs-chat .rcb-bot-message,
+.vs-chat .rcb-user-message {
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  font-size: 13.5px !important;
+  line-height: 1.5;
+  padding: 10px 12px !important;
+  max-width: 92%;
+}
+.vs-chat .rcb-bot-message {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--ink) !important;
+  margin-left: 12px !important;
+}
+.vs-chat .rcb-user-message {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border: 1px solid var(--ink) !important;
+  margin-right: 12px !important;
+}
+.vs-chat .rcb-chat-input {
+  background: var(--paper) !important;
+  border-top: 1px solid var(--ink) !important;
+  padding: 10px 12px !important;
+}
+.vs-chat .rcb-chat-input-textarea {
+  border: 1px solid var(--ink-40) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--ink) !important;
+  font-size: 13.5px !important;
+  min-height: 36px;
+}
+.vs-chat .rcb-chat-input-textarea:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: -1px;
+}
+.vs-chat .rcb-send-button {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: var(--ink) !important;
+  border: 1px solid var(--ink) !important;
+  width: 44px !important;
+}
+.vs-chat .rcb-send-icon {
+  fill: var(--paper) !important;
+}
+.vs-chat .rcb-chat-input-char-counter {
+  color: var(--ink-60) !important;
+  font-family: var(--font-mono);
+  font-size: 10px !important;
+}
+.vs-chat .rcb-typing-indicator .rcb-dot {
+  background: var(--ink) !important;
+}
+.vs-chat .rcb-chat-footer-container {
+  display: none !important;
+}
+.vs-chat .rcb-message-prompt-text {
+  border-radius: 0 !important;
+  border: 1px solid var(--ink) !important;
+  color: var(--ink) !important;
+  background: var(--paper) !important;
+  box-shadow: none !important;
+}
+.vs-chat .vs-chip {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 4px 8px;
+  margin: 0 6px 6px 0;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.vs-chat .vs-chip:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.vs-chat .vs-chip:active {
+  transform: scale(0.97);
+}
+.vs-chat .vs-meta {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-60);
+}
+.vs-chat details > summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.vs-chat .vs-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 3px;
+  background: var(--ink);
+  animation: vs-blink 1s infinite ease-in-out;
+}
+.vs-chat .vs-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.vs-chat .vs-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes vs-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* Assistant messages are rendered as JSX, so they get their own flat bubble: off-white, 1px charcoal border, 2px radius. */
+.vs-chat .vs-bubble {
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 10px 12px;
+  margin: 8px 12px 0 12px;
+  max-width: 92%;
+  font-size: 13.5px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.vs-chat .vs-thinking {
+  width: fit-content;
+}
+
+/* Belt and braces: nothing inside the widget may carry a drop effect (the library adds some on focus). */
+.vs-chat *,
+.vs-chat *::before,
+.vs-chat *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}

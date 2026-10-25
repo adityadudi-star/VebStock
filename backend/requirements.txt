@@ -1,0 +1,13 @@
+﻿fastapi==0.162.0
+lightgbm==4.7.0
+numpy==2.5.4
+pandas==3.1.0
+psycopg==3.3.6
+psycopg-binary==3.3.6
+PuLP==3.3.2
+pydantic==2.14.1
+pydantic-settings==2.16.1
+python-dotenv==1.2.4
+RapidFuzz==3.14.6
+SQLAlchemy==2.1.6
+uvicorn==0.54.0
