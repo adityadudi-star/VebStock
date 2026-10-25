@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { get } from "@/lib/api";
+import { useAuth } from "@/components/AuthProvider";
 import { date } from "@/lib/format";
 import { useApi } from "@/lib/hooks";
 import type { Health } from "@/lib/types";
@@ -44,6 +45,7 @@ export function Clock() {
 
 export default function SiteHeader() {
   const health = useApi<Health>("health", (s) => get<Health>("/health", undefined, s));
+  const { user, roleDef } = useAuth();
   return (
     <div className="mx-auto flex min-h-[64px] max-w-[1280px] items-center gap-4 flex-wrap pl-16 pr-16 pt-3 sm:min-h-[76px] sm:flex-nowrap sm:pl-20 sm:pr-[11.5rem]">
       <div className="min-w-0">
@@ -51,6 +53,12 @@ export default function SiteHeader() {
         <span className="kicker ml-4 hidden lg:inline">The right stock. The right place. The right time.</span>
         {health.data?.as_of ? (
           <div className="kicker mt-1 hidden sm:block !text-ink">Simulated data snapshot: {date(health.data.as_of)}</div>
+        ) : null}
+        {roleDef ? (
+          <div className="kicker mt-1 !text-ink" data-testid="role-line">
+            {roleDef.label}
+            {user ? ` · ${user.username}${user.store_name ? ` · ${user.store_name}` : ""}` : " · demo view"}
+          </div>
         ) : null}
       </div>
       <div className="ml-auto shrink-0">

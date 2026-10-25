@@ -28,6 +28,7 @@ export function photoUrl(key: PhotoKey, w: number): string {
 /** Banner photo for each view. */
 export const VIEW_PHOTO: Record<string, PhotoKey> = {
   "/": "warehouse",
+  "/overview": "warehouse",
   "/inventory": "shelves",
   "/forecast": "grocery",
   "/plan": "aerial",

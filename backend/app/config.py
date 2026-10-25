@@ -20,6 +20,13 @@ class Settings(BaseSettings):
     environment: str = "development"
     log_level: str = "INFO"
     llm_api_key: str = ""  # optional; enables the LLM assistant
+    # Role-based access. When true (default) every data endpoint needs a signed bearer token whose role is allowed.
+    # Set AUTH_REQUIRED=false only for local development or automated tests of the pre-existing endpoints.
+    auth_required: bool = True
+    # HMAC key for session tokens. Required in production; in development a random per-process key is used
+    # (tokens then stop working when the API restarts).
+    auth_secret: str = ""
+    auth_token_hours: int = 12
 
     @property
     def cors_origin_list(self) -> list[str]:

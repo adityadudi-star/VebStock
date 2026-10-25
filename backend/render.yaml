@@ -22,6 +22,8 @@ services:
         sync: false            # e.g. https://your-app.vercel.app  (set in the Render dashboard)
       - key: CORS_ORIGIN_REGEX
         sync: false            # optional, for Vercel previews: https://your-app-.*\.vercel\.app
+      - key: AUTH_SECRET
+        generateValue: true    # signs session tokens; required in production
       - key: LOG_LEVEL
         value: INFO
 

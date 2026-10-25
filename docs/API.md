@@ -98,3 +98,23 @@ low stock, excess, near expiry, delayed shipments, plan summary/KPIs, baseline-v
 safety stock, P10/P50/P90, MAPE/WAPE, reserved, days of cover, ...), how-to (generate/override/approve/simulate/trade-off).
 It is **not an LLM**: it never generates free text beyond its templates and stored values. `tests/test_assistant.py` implements the PRD's
 20-question check (15 in-scope answers compared with the database, 5 out-of-scope refused) plus typo/paraphrase cases.
+
+
+## Authentication and roles
+
+Roles: `manufacturer`, `finance`, `warehouse`, `retail` (a retail account is bound to one store). Create accounts with
+`python -m scripts.create_user --username NAME --role ROLE [--store-id N]`. `POST /auth/login {username, password, role?}`
+returns a signed bearer token (`Authorization: Bearer ...`); `GET /auth/me` returns the caller. With `AUTH_REQUIRED=false`
+(local development only) all endpoints are open, as before.
+
+| Endpoint | Roles |
+|---|---|
+| `/health`, `/auth/login` | public |
+| `/inventory`, `/forecast`, `/alerts` | all; retail is forced to its own store (other stores/aggregates: 403) |
+| `/meta`, `/overview`, `/inventory/batches`, `/plans`, `/plans/{id}`, `/assistant` | manufacturer, finance, warehouse |
+| `POST /plan`, `PATCH /plan/{id}`, `/plans/{id}/pick-list`, `POST /simulate`, `/overrides` | warehouse, finance |
+| `/compare` | finance, manufacturer |
+| `GET /finance/summary` | finance (stock value, sales, expiry exposure at list price / write-off cost; no profit) |
+| `GET /retail/deliveries` | retail (own store: in-transit shipments and approved-plan lines) |
+
+With auth on, `PATCH /plan/{id}` records the authenticated username as `actor`, ignoring the request body.

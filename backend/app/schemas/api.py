@@ -396,3 +396,22 @@ class AssistantAnswer(BaseModel):
     confidence: float = 0.0
     sources: list[dict[str, Any]]
     suggestions: list[str] = Field(default_factory=list)
+
+
+class LoginRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=64)
+    password: str = Field(min_length=1, max_length=256)
+    role: Optional[Literal["manufacturer", "finance", "warehouse", "retail"]] = None
+
+
+class UserOut(BaseModel):
+    username: str
+    role: str
+    store_id: Optional[int] = None
+    store_name: Optional[str] = None
+
+
+class LoginOut(BaseModel):
+    token: str
+    expires_at: int
+    user: UserOut

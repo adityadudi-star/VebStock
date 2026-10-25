@@ -7,6 +7,8 @@ _TMP = Path(tempfile.mkdtemp(prefix="vebstock_test_"))
 os.environ["DATABASE_URL"] = "sqlite:///" + (_TMP / "test.db").as_posix()
 os.environ["CORS_ORIGINS"] = "https://vebstock.vercel.app,http://localhost:3000"
 os.environ["MODEL_DIR"] = str(_TMP / "models")
+# Pre-existing endpoint tests run open; tests/test_auth.py turns enforcement on explicitly.
+os.environ["AUTH_REQUIRED"] = "false"
 
 import pytest  # noqa: E402
 from datetime import datetime  # noqa: E402

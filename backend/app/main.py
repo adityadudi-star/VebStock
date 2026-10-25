@@ -9,6 +9,8 @@ from fastapi.responses import JSONResponse
 from app import __version__
 from app.api.routes import router
 from app.config import get_settings
+from app.database import models
+from app.database.session import engine
 
 settings = get_settings()
 logging.basicConfig(level=settings.log_level, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -44,5 +46,11 @@ async def unhandled(request: Request, exc: Exception):
     log.exception("unhandled error on %s %s", request.method, request.url.path)
     return JSONResponse(status_code=500, content={"detail": "internal server error"})
 
+
+# Additive: the login table is created on demand so existing databases need no manual migration.
+try:
+    models.AppUser.__table__.create(engine, checkfirst=True)
+except Exception:  # database unreachable at import time: /health reports it
+    log.warning("could not ensure app_users table exists", exc_info=True)
 
 app.include_router(router)

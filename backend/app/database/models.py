@@ -243,3 +243,16 @@ class SeriesParam(Base):
     sku_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     base_rate: Mapped[float] = mapped_column(Float)
     growth: Mapped[float] = mapped_column(Float)
+
+
+class AppUser(Base):
+    """Login account. Additive table; role is one of manufacturer | finance | warehouse | retail.
+    Retail users are bound to exactly one store and can only read that store's data."""
+    __tablename__ = "app_users"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(String(64), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(256))
+    role: Mapped[str] = mapped_column(String(16), index=True)
+    store_id: Mapped[int | None] = mapped_column(ForeignKey("stores.id"), nullable=True)
+    active: Mapped[int] = mapped_column(Integer, default=1)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

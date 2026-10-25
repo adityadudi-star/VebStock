@@ -6,7 +6,7 @@ export interface View {
 }
 
 export const VIEWS: View[] = [
-  { n: "01", href: "/", title: "Overview", blurb: "Position, alerts and measured KPIs" },
+  { n: "01", href: "/overview", title: "Overview", blurb: "Position, alerts and measured KPIs" },
   { n: "02", href: "/inventory", title: "Inventory", blurb: "Stock at every tier, with expiry batches" },
   { n: "03", href: "/forecast", title: "Forecast", blurb: "P10 / P50 / P90 demand and accuracy" },
   { n: "04", href: "/plan", title: "Distribution Plan", blurb: "Generate, override, approve, pick" },

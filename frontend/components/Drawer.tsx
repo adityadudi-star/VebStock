@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { VIEWS } from "@/lib/nav";
+import { canAccess } from "@/lib/roles";
+import { useAuth } from "./AuthProvider";
 import { useReduced } from "./Motion";
 
 export default function Drawer() {
@@ -16,6 +18,13 @@ export default function Drawer() {
   const btnRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const reduced = useReduced();
+  const { status, user, role, roleDef, logout } = useAuth();
+  // Open mode keeps the full menu; a role (signed in, or chosen as a demo view) narrows it to that role's pages.
+  const signedOut = status === "secure" && !user;
+  const items = signedOut ? [] : [
+    ...(roleDef ? [{ n: "00", href: roleDef.home, title: `${roleDef.label} dashboard`, blurb: "Your role's home page" }] : []),
+    ...VIEWS.filter((v) => !role || canAccess(role, v.href)),
+  ];
 
   useEffect(() => {
     if (!open) return;
@@ -113,8 +122,8 @@ export default function Drawer() {
             animate={open ? "open" : "closed"}
             variants={{ open: { transition: { staggerChildren: reduced ? 0 : 0.035, delayChildren: reduced ? 0 : 0.08 } }, closed: {} }}
           >
-            {VIEWS.map((v) => {
-              const current = v.href === "/" ? pathname === "/" : pathname.startsWith(v.href);
+            {items.map((v) => {
+              const current = pathname === v.href || pathname.startsWith(`${v.href}/`);
               return (
                 <motion.li
                   key={v.href}
@@ -138,6 +147,22 @@ export default function Drawer() {
               );
             })}
           </motion.ol>
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-paper-60 pt-4">
+            {user || (status === "open" && roleDef) ? (
+              <Link
+                href="/"
+                onClick={logout}
+                className="inline-flex items-center gap-2 border border-paper-60 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] hover:bg-paper-15"
+              >
+                {user ? "Sign out" : "Switch role"}
+              </Link>
+            ) : (
+              <Link href="/" className="inline-flex items-center gap-2 border border-paper-60 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] hover:bg-paper-15">
+                Choose a role
+              </Link>
+            )}
+            {user ? <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-paper-60">{user.username}</span> : null}
+          </div>
           <p className="mt-6 font-mono text-[10px] uppercase leading-relaxed tracking-[0.1em] text-paper-60">
             All figures come from simulated data. Targets are shown separately and never assumed met.
           </p>

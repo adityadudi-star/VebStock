@@ -4,6 +4,7 @@ import { Bot } from "lucide-react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import dynamic from "next/dynamic";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useAuth } from "./AuthProvider";
 import { useReduced } from "./Motion";
 import { Loading } from "./Stateful";
 
@@ -39,6 +40,9 @@ export function AssistantProvider({ children }: { children: React.ReactNode }) {
   const [everOpened, setEverOpened] = useState(false);
   const [label, setLabel] = useState(DEFAULT_LABEL);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  // The assistant answers from company-wide data, so store accounts and signed-out visitors do not get it.
+  const { status, user } = useAuth();
+  const allowed = status === "open" || (!!user && user.role !== "retail");
   const setOpen = (v: boolean) => {
     setOpenState(v);
     if (v) setEverOpened(true);
@@ -46,8 +50,12 @@ export function AssistantProvider({ children }: { children: React.ReactNode }) {
   return (
     <AssistantContext.Provider value={{ open, setOpen, everOpened, label, setLabel, buttonRef }}>
       {children}
-      <AssistantButton />
-      <AssistantPanel />
+      {allowed ? (
+        <>
+          <AssistantButton />
+          <AssistantPanel />
+        </>
+      ) : null}
     </AssistantContext.Provider>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
+import { AuthGate, AuthProvider } from "@/components/AuthProvider";
 import Drawer from "@/components/Drawer";
 import { ConfigBanner } from "@/components/Stateful";
 import { AssistantProvider } from "@/components/Assistant";
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
       <body>
+        <AuthProvider>
         <AssistantProvider>
         <ScrollProgress />
         <SmoothScroll />
@@ -32,7 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Drawer />
         <SiteHeader />
         <ConfigBanner />
-        <main className="mx-auto max-w-[1280px] px-4 pb-24 pt-6 sm:px-8">{children}</main>
+        <main className="mx-auto max-w-[1280px] px-4 pb-24 pt-6 sm:px-8">
+          <AuthGate>{children}</AuthGate>
+        </main>
         <footer className="mx-auto max-w-[1280px] border-t border-ink-15 px-4 py-6 sm:px-8">
           <Disclosure title="Glossary: plain meanings of a few terms">
             <Glossary />
@@ -46,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </p>
         </footer>
         </AssistantProvider>
+        </AuthProvider>
       </body>
     </html>
   );

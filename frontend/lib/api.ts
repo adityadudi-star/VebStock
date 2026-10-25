@@ -46,6 +46,16 @@ export class ApiError extends Error {
 
 type Params = Record<string, string | number | boolean | null | undefined>;
 
+// Session token, set by AuthProvider. The backend re-checks it on every request; the UI never relies on it for security.
+let authToken: string | null = null;
+let onUnauthorized: (() => void) | null = null;
+export function setAuthToken(t: string | null) {
+  authToken = t;
+}
+export function setUnauthorizedHandler(fn: (() => void) | null) {
+  onUnauthorized = fn;
+}
+
 function qs(params?: Params): string {
   if (!params) return "";
   const u = new URLSearchParams();
@@ -87,7 +97,10 @@ export async function request<T>(
   try {
     res = await fetch(`${base}${path}${qs(opts.params)}`, {
       method: opts.method ?? "GET",
-      headers: opts.body !== undefined ? { "Content-Type": "application/json" } : undefined,
+      headers: {
+        ...(opts.body !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
       body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
       signal: opts.signal,
     });
@@ -104,7 +117,10 @@ export async function request<T>(
   } catch {
     json = null;
   }
-  if (!res.ok) throw extract(res.status, json);
+  if (!res.ok) {
+    if (res.status === 401 && authToken) onUnauthorized?.();
+    throw extract(res.status, json);
+  }
   return json as T;
 }
 

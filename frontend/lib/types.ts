@@ -553,3 +553,45 @@ export interface AlertsResponse {
   alerts: AlertRow[];
   refreshed_with_forecast_run: number | null;
 }
+
+// ---------------------------------------------------------------- role portal
+export interface FinanceSummary {
+  as_of: string;
+  inventory_value: {
+    basis: string;
+    total: number;
+    by_tier: Record<string, { value: number; units: number }>;
+    by_category: { category: string; store: number; warehouse: number; in_transit: number }[];
+  };
+  sales: {
+    basis: string;
+    days: number;
+    total: number;
+    units: number;
+    by_category: { category: string; value: number; units: number }[];
+  };
+  expiry_exposure: Record<string, { units: number; writeoff_value: number; list_value: number }>;
+  latest_plan: {
+    id: number;
+    status: string;
+    cost_breakdown: { transport: number; shortage: number; expiry: number; total: number };
+    units_shipped: number | null;
+    projected_fill_rate_pct: number | null;
+    expected_expiry_value: number | null;
+  } | null;
+  limitations: string[];
+}
+
+export interface RetailDeliveries {
+  store: { id: number; name: string; region: string };
+  incoming: {
+    sku_code: string;
+    sku_name: string;
+    qty: number;
+    eta_date: string;
+    delay_days: number;
+    status: string;
+  }[];
+  approved_plan: { id: number; approved_at: string | null; approved_by: string | null } | null;
+  planned_lines: { sku_code: string; sku_name: string; warehouse: string; qty: number; lead_time_days: number | null }[];
+}
